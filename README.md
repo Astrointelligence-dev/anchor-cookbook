@@ -7,7 +7,7 @@ Hands-on Jupyter Notebook recipes covering the entire [Anchor](https://github.co
 ```bash
 git clone https://github.com/arthurgranja/anchor-cookbook.git
 cd anchor-cookbook
-uv venv && uv pip install -r requirements.txt
+uv venv && uv pip install -e .
 jupyter notebook
 ```
 
