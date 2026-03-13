@@ -1,0 +1,38 @@
+name: Validate Notebooks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv pip install --system -r requirements.txt
+
+      - name: Validate all notebooks
+        run: |
+          failed=0
+          for nb in $(find . -name "*.ipynb" -not -path "./.ipynb_checkpoints/*" | sort); do
+            echo "Executing: $nb"
+            if ! jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=120 "$nb" 2>&1; then
+              echo "FAILED: $nb"
+              failed=1
+            fi
+          done
+          exit $failed

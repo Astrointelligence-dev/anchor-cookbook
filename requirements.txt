@@ -1,0 +1,4 @@
+astro-anchor[all]>=0.1.0
+jupyter>=1.0
+ipykernel>=6.0
+nbformat>=5.0
