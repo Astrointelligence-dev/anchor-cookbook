@@ -22,11 +22,15 @@ jobs:
       - name: Set up Python
         run: uv python install ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: uv pip install --system -e .
+      - name: Create venv and install dependencies
+        run: |
+          uv venv --python ${{ matrix.python-version }}
+          source .venv/bin/activate
+          uv pip install -e .
 
       - name: Validate all notebooks
         run: |
+          source .venv/bin/activate
           failed=0
           for nb in $(find . -name "*.ipynb" -not -path "./.ipynb_checkpoints/*" | sort); do
             echo "Executing: $nb"
